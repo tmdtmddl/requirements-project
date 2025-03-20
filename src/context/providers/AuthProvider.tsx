@@ -79,7 +79,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     email: string;
     password: string;
     name: string;
-    jobDesc: AUTH.UserJob;
+    jobDesc: AUTH.UserJob | "";
   }): PromiseResult => {
     try {
       const { user } = await authService.createUserWithEmailAndPassword(
