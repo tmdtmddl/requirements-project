@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { emailValidator } from "../../utils";
 import { AUTH } from "../../context/hooks";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import TextInput from "../../components/ui/TextInput";
 
 const AuthPage = () => {
   const isNew = useSearchParams()[0].get("content");
@@ -24,7 +25,7 @@ const AuthPage = () => {
         return nameRef.current?.focus();
       }
       if (jobDesc.length === 0) {
-        alert("직종선택 ㄱㄱ");
+        alert("종사직종 선택해주세요.");
         return jobRef.current?.showPicker();
       }
     }
@@ -33,34 +34,38 @@ const AuthPage = () => {
       return alert("이메일을 확인해주세요.");
     }
     if (password.length < 6 || password.length > 18) {
-      return alert("비밀번호를 확인해주세요. 6-18자사이입니다.");
+      return alert("비밀번호를 확인해주세요. 6~18자사이입니다.");
     }
 
-    const { success, message } = await signin(email, password); //???
-
-    if (!success) {
-      setTimeout(() => {
-        if (message === "존재하지 않는 유저입니다.") {
-          if (confirm(message + "" + "회원가입할겨??")) {
-            navi("signin?content=new");
-            return;
+    if (!isNew) {
+      const { success, message } = await signin(email, password); //??
+      if (!success) {
+        if (message === "존재하지 않는 유저") {
+          if (confirm(message + "" + "회원가입 하시겠습니까?")) {
+            navi("/signin?content=new");
+            return setTimeout(() => {
+              nameRef.current?.focus();
+            }, 500);
           }
-          return;
         }
-      }, 300);
+      }
+      alert("환영합니다");
+      navi("/project");
+      return;
+    }
+
+    const { success, message } = await signup({
+      email,
+      jobDesc,
+      name,
+      password,
+    });
+    if (!success) {
       return alert(message);
     }
-    alert("환영합니다.");
-    navi("/project");
-    return;
+    alert("회원가입 진심으로 축하드립니다. 프로젝트를 생성해보세요");
+    navi("project");
   };
-
-  //   const { success, message } = await signup({
-  //     email,
-  //     password,
-  //     jobDesc,
-  //     name,
-  //   });
 
   return (
     <div>
@@ -75,13 +80,14 @@ const AuthPage = () => {
           <>
             <div>
               <label htmlFor="name">name</label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+              <TextInput
+                ref={emailRef}
+                type="email"
+                id="email"
+                value={email}
+                onChange={setEmail}
+                label="이름"
                 placeholder="박보검"
-                ref={nameRef}
               />
             </div>
             <div>

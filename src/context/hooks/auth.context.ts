@@ -3,15 +3,14 @@ import { useContext, createContext } from "react";
 export interface NewUser extends Omit<User, "uid"> {
   password: string;
 }
+
 export interface Props {
   user: User | null;
   initialized: boolean;
 
   signup: (newUser: NewUser) => PromiseResult;
-
-  signout: () => PromiseResult;
-
   signin: (email: string, password: string) => PromiseResult;
+  signout: () => PromiseResult;
 }
 
 export interface User {
@@ -30,12 +29,13 @@ export const userJobs: UserJob[] = [
   "고객",
   "기타",
 ];
+
 export const initialState: Props = {
   initialized: false,
   user: null,
-  signup: async () => ({}),
   signin: async () => ({}),
   signout: async () => ({}),
+  signup: async () => ({}),
 };
 
 export const Context = createContext(initialState);

@@ -6,11 +6,12 @@ interface Props {
   onChange: (value: string) => void;
   ref: Ref<HTMLInputElement | HTMLSelectElement>;
   label: string;
-  type?: React.HTMLInputTypeAttribute;
+  type?: React.HTMLInputTypeAttribute | undefined;
   placeholder?: string;
   isSelectTag?: boolean;
-  data?: string;
+  data?: string[];
 }
+
 const TextInput = ({
   id,
   label,
@@ -24,13 +25,19 @@ const TextInput = ({
 }: Props) => {
   return (
     <div>
-      <label htmlFor=""></label>
+      <label htmlFor="">{label}</label>
       {isSelectTag ? (
-        <select>
-          <option value="" />
-        </select>
+        <select
+          id={id}
+          onChange={(e) => onChange(e.target.value)}
+          value={value}
+        ></select>
       ) : (
-        <input />
+        <input
+          id={id}
+          onChange={(e) => onChange(e.target.value)}
+          value={value}
+        />
       )}
     </div>
   );

@@ -3,20 +3,21 @@ import { AUTH } from "../hooks";
 import { authService, db } from "../../lib/firebase";
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState(AUTH.initialState.user);
-
+  const [user, setUser] = useState<AUTH.User | null>(AUTH.initialState.user);
   const [initialized, setInitialized] = useState(false);
 
   const fetchUser = async (uid: string) => {
-    const snap = await db.collection("users").doc(uid).get();
+    try {
+      const snap = await db.collection("users").doc(uid).get();
+      const data = snap.data() as AUTH.User | undefined;
 
-    const data = snap.data() as null | AUTH.User;
-
-    if (!data) {
-      return;
+      if (data) {
+        setUser(data); // 사용자를 상태로 설정
+        console.log(data, "fetched");
+      }
+    } catch (error: any) {
+      console.error("Error fetching user data:", error);
     }
-    setUser(data);
-    console.log(data, "fetched");
   };
 
   useEffect(() => {
@@ -38,7 +39,8 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   const signout = async (): PromiseResult => {
     try {
-      authService.signOut();
+      await authService.signOut();
+      setUser(null);
       return { success: true };
     } catch (error: any) {
       return { message: error.message };
@@ -59,9 +61,10 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           .where("email", "==", email)
           .get();
         const data = snap.docs.map((doc) => ({ ...doc.data() }));
-        if (!data) {
-          ("존재하지 않는 유저입니다.");
+        if (!data || data.length === 0) {
+          return { message: "존재하지 않는 유저입니다." };
         }
+        return { message: "회원가입하시겠습니까?" };
       }
       return { message: error.message };
     }
@@ -69,32 +72,30 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   const signup = async ({
     email,
-    jobDesc,
     name,
+    jobDesc,
     password,
   }: {
     email: string;
     password: string;
-    jobDesc: AUTH.UserJob;
     name: string;
+    jobDesc: AUTH.UserJob;
   }): PromiseResult => {
     try {
       const { user } = await authService.createUserWithEmailAndPassword(
         email,
         password
       );
+
       if (!user) {
-        return { message: "존재하지않는 유저입니다." };
+        return { message: "존재하지 않은 유저" };
       }
-      const newUser: AUTH.User = {
-        email,
-        password,
-        jobDesc,
-        name,
-        uid: user.uid,
-      };
+
+      const newUser: AUTH.User = { email, name, jobDesc, uid: user.uid };
+
       await db.collection("users").doc(user.uid).set(newUser);
-      setUser();
+
+      setUser(newUser);
       return { success: true };
     } catch (error: any) {
       return { message: error.message };
@@ -103,7 +104,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   return (
     <AUTH.Context.Provider
-      value={{ initialized, signin, signup, signout, user }}
+      value={{ initialized, signin, signout, signup, user }}
     >
       {children}
     </AUTH.Context.Provider>
