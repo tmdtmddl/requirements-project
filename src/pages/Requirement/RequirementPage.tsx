@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { db, FBCollection } from "../../lib/firebase";
 import { AUTH } from "../../context/hooks";
 import ProjectItem from "../Project/ProjectItem";
 import NotFound from "../../components/ui/NotFound";
 import RequirementForm from "./RequirementForm";
-import RequirementItme from "./RequirementItme";
+import RequirementItem from "./RequirementItme";
 
 const RequirementPage = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -26,18 +26,19 @@ const RequirementPage = () => {
             (doc) => ({ ...doc.data(), id: doc.id } as RProps)
           );
 
-          //   const sort = () => {
-          //     return data.sort((a, b) => {
-          //       if (a.createdAt === b.createdAt) {
-          //         return 0;
-          //       } else if (a.createdAt > b.createdAt) {
-          //         return -1;
-          //       } else {
-          //         return 1;
-          //       }
-          //     });
-          //   };
-          //   console.log("array", sort());
+          // const sort = () => {
+          //   return data.sort((a, b) => {
+          //     if (a.createdAt === b.createdAt) {
+          //       return 0;
+          //     } else if (a.createdAt > b.createdAt) {
+          //       return -1;
+          //     } else {
+          //       return 1;
+          //     }
+          //   });
+          // };
+
+          // console.log("sorted array", sort());
 
           setRequirements(data);
         });
@@ -84,14 +85,14 @@ const RequirementPage = () => {
           onCancel={addHandler}
         />
       ) : (
-        <button className="button my-5 " onClick={addHandler}>
+        <button className="button mt-5" onClick={addHandler}>
           요구사항 추가
         </button>
       )}
       <ul className="col gap-y-2.5 mt-5">
         {requirements.map((r) => (
-          <li key={r?.id} className="mt-5 ">
-            <RequirementItme {...r} />
+          <li key={r?.id}>
+            <RequirementItem {...r} />
           </li>
         ))}
       </ul>

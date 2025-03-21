@@ -77,13 +77,13 @@ const AuthPage = () => {
   return (
     <div>
       <form
+        className="col gap-y-2.5 max-w-100 mx-auto p-5"
         onSubmit={(e) => {
           e.preventDefault();
           //! 새로고침 방지
 
           onSubmit();
         }}
-        className="col gap-y-2.5 max-w-100 mx-auto mt-5 "
       >
         {isNew && (
           <>

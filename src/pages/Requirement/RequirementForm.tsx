@@ -1,15 +1,16 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import TextInput from "../../components/ui/TextInput";
 import { db, FBCollection } from "../../lib/firebase";
 import { progresses } from "../../lib/dummy";
 
 interface Props {
   payload?: RProps;
-  onCancel: () => void;
-  onSubmitEditing?: () => void;
 
+  onCancel: () => void;
   uid: string;
   projectId: string;
+
+  onSubmitEditing?: () => void;
 }
 
 const initialState: RProps = {
@@ -42,8 +43,8 @@ const RequirementForm = ({
   const fRef = useRef<HTMLInputElement>(null);
   const dRef = useRef<HTMLInputElement>(null);
   const mRef = useRef<HTMLInputElement>(null);
-  const sRef = useRef<HTMLInputElement>(null);
   const proRef = useRef<HTMLSelectElement>(null);
+  const sRef = useRef<HTMLInputElement>(null);
 
   const [desc, setDesc] = useState("");
   const [manager, setManager] = useState("");
@@ -58,9 +59,7 @@ const RequirementForm = ({
     }
     if (r.progress.length === 0) {
       alert("진행상태를 선택해주세요.");
-      return setTimeout(() => {
-        proRef.current?.showPicker();
-      }, 300);
+      return proRef.current?.showPicker();
     }
     if (r.page.length === 0) {
       alert("기능 적용할 페이지를 입력해주세요.");
@@ -101,7 +100,6 @@ const RequirementForm = ({
       payload.progress === r.progress &&
       payload.page === r.page &&
       payload.function === r.function;
-
     let isDescSame = true;
     for (const desc of r.desc) {
       const foundDesc = payload.desc.find((item) => item === desc);
@@ -117,13 +115,14 @@ const RequirementForm = ({
         isManagerSame = false;
       }
     }
+
     if (
       isPPFSame &&
       isDescSame &&
       isManagerSame &&
-      sRef.current?.checked === r.isSharable
+      sRef.current?.checked === r?.isSharable
     ) {
-      return alert("변경사항 ㄴㄴ");
+      return alert("변경사항이 없습니다.");
     }
 
     try {
@@ -140,9 +139,9 @@ const RequirementForm = ({
     }
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => proRef.current?.showPicker(), 300);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => proRef.current?.showPicker(), 300);
+  }, []);
 
   return (
     <form
@@ -299,17 +298,18 @@ const RequirementForm = ({
         )}
       </div>
       <div className="flex justify-between items-center">
-        <label htmlFor="share" className="ti-label ">
+        <label htmlFor="share" className="ti-label">
           누구나 볼 수 있도록 공유하시겠습니까?
         </label>
         <input
           type="checkbox"
           id="share"
           ref={sRef}
-          checked={r.isSharable}
           className="w-5 h-5"
+          checked={r.isSharable}
         />
       </div>
+
       <div className="flex gap-x-2.5 mt-2.5">
         <button
           type="button"

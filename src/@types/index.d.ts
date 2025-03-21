@@ -2,7 +2,7 @@ type PromiseResult = Promise<{ success?: boolean; message?: string }>;
 
 interface ProjectProps {
   name: string;
-  id?: string; //삭제시킬때 씀
+  id?: string;
   uid: string;
 }
 
@@ -17,7 +17,7 @@ interface RProps {
   managers: string[];
   progress: RProgress | "";
 
-  id?: string; //파이어베이스가 자동생성해주는 아이디
+  id?: string; //! firebase가 자동생성해주는 아이디
 
   isSharable?: boolean;
 }

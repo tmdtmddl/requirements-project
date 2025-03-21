@@ -3,14 +3,13 @@ import { AUTH } from "../../context/hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db, FBCollection } from "../../lib/firebase";
 import NotFound from "../../components/ui/NotFound";
-import { signOut } from "firebase/auth";
-import RequirementItme from "../Requirement/RequirementItme";
+import RequirementItem from "../Requirement/RequirementItme";
 import RequirementForm from "../Requirement/RequirementForm";
 
 const RDetailPage = () => {
   const [r, setR] = useState<RProps | null>(null);
-  const { user, signout } = AUTH.use();
-  const { rid, projectId } = useParams<{ projectId: string; rid: string }>();
+  const { user } = AUTH.use();
+  const { rid, projectId } = useParams<{ rid: string; projectId: string }>();
 
   useEffect(() => {
     const subR = db
@@ -24,22 +23,25 @@ const RDetailPage = () => {
           setR(data);
         }
       });
+
     subR;
     return subR;
   }, [rid]);
 
   const navi = useNavigate();
+
   const back = () => {
     navi(`/project/${projectId}`);
   };
 
   if (!r) {
-    return <NotFound message="존재하지 않는 페이지입니다." />;
+    return <NotFound message="존재하지 않는 페이지 입니다." />;
   }
+
   if (r.isSharable && (!user || user.uid !== r.uid)) {
     return (
       <div className="p-5">
-        <RequirementItme {...r} />
+        <RequirementItem {...r} />
       </div>
     );
   }
@@ -47,8 +49,8 @@ const RDetailPage = () => {
   return (
     <div>
       <div className="flex">
-        <div className="flex gap-x-1 items-center ">
-          <Link to={`/project`} className="p-2.5 hover:text-theme">
+        <div className="flex gap-x-1 items-center text-gray-500">
+          <Link to={"/project"} className="p-2.5 hover:text-theme">
             프로젝트
           </Link>
           <p>{">"}</p>
@@ -59,11 +61,10 @@ const RDetailPage = () => {
       </div>
       <RequirementForm
         payload={r}
-        onCancel={() => {
-          console.log();
-        }}
+        onCancel={back}
         projectId={r.projectId}
-        uid={r.uid}
+        uid={user?.uid as string}
+        onSubmitEditing={back}
       />
     </div>
   );

@@ -22,7 +22,7 @@
 
 // export default App;
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import AuthPage from "./pages/Auth";
 import Project from "./pages/Project/Project";
@@ -46,7 +46,7 @@ const App = () => {
             />
           }
         />
-        <Route path="/" element={<Layout user={user} />}>
+        <Route path="/" Component={Layout}>
           <Route index Component={Home} />
           {!user && <Route path="signin" Component={AuthPage} />}
           <Route path="project">

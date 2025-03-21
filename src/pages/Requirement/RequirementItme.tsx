@@ -4,9 +4,10 @@ import { db, FBCollection } from "../../lib/firebase";
 import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../context/hooks";
 
-const RequirementItme = (r: RProps) => {
-  const { user } = AUTH.use;
+const RequirementItem = (r: RProps) => {
+  const { user } = AUTH.use();
   const { page, desc, function: f, managers, progress } = r;
+
   const [isHovering, setIsHovering] = useState(false);
 
   const ref = db.collection(FBCollection.REQUIREMENTS).doc(r.id);
@@ -20,30 +21,31 @@ const RequirementItme = (r: RProps) => {
       behavior: "smooth",
     });
   };
-
   return (
     <div
-      className="border  rounded p-2.5 border-border hover:bg-lightgray col relative"
+      className="border rounded p-2.5 border-border col relative"
       onMouseEnter={() => {
         if (!user || user.uid === r.id) {
           return;
         }
         setIsHovering(true);
       }}
-      onMouseLeave={() => setIsHovering(false)}
+      onMouseLeave={() => {
+        setIsHovering(false);
+      }}
     >
       {isHovering && (
         <div className="flex gap-x-2.5 absolute bottom-2.5 right-2.5">
-          <button className="button cancel" onClick={() => navi(r.id!)}>
+          <button className="button cancel" onClick={move}>
             수정
           </button>
           <button
-            className=""
+            className="hover:text-red-500 button cancel"
             onClick={async () => {
-              if (confirm("해당요구사항삭제?")) {
+              if (confirm("해당 요구사항을 삭제하시겠습니까?")) {
                 try {
                   await ref.delete();
-                  alert("");
+                  alert("삭제되었습니다.");
                 } catch (error: any) {
                   return alert(error.message);
                 }
@@ -54,20 +56,17 @@ const RequirementItme = (r: RProps) => {
           </button>
         </div>
       )}
-
       <div className="flex justify-between border-b border-border pb-2.5">
         <button
-          className="font-bold flex-1 text-left cursor-pointer"
+          className="font-bold flex-1 text-left cursor-pointer hover:text-theme"
           onClick={move}
         >
           {page}/{f}
         </button>
-
         {user && user.uid === r.uid ? (
           <select
             value={progress}
             onChange={async (e) => {
-              const ref = db.collection(FBCollection.REQUIREMENTS).doc(r.id);
               try {
                 await ref.update({ progress: e.target.value });
               } catch (error: any) {
@@ -76,9 +75,7 @@ const RequirementItme = (r: RProps) => {
             }}
           >
             {progresses.map((item) => (
-              <option value="" key={item}>
-                {item}
-              </option>
+              <option key={item}>{item}</option>
             ))}
           </select>
         ) : (
@@ -88,7 +85,7 @@ const RequirementItme = (r: RProps) => {
       <ul className="col p-2.5 gap-y-1">
         {desc.map((item, index) => (
           <li key={item} className="font-light">
-            {index + 1}.{item}
+            {index + 1}. {item}
           </li>
         ))}
       </ul>
@@ -96,7 +93,7 @@ const RequirementItme = (r: RProps) => {
         {managers.map((item) => (
           <li
             key={item}
-            className="px-2 rounded bg-lightgray text-sm hover:bg-gray-100 py-1"
+            className="p-2 rounded bg-lightgray text-sm hover:bg-gray-100 py-1"
           >
             {item}
           </li>
@@ -106,4 +103,4 @@ const RequirementItme = (r: RProps) => {
   );
 };
 
-export default RequirementItme;
+export default RequirementItem;

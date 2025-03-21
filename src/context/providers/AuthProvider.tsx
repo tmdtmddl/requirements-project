@@ -8,17 +8,14 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [initialized, setInitialized] = useState(false);
 
   const fetchUser = async (uid: string) => {
-    try {
-      const snap = await db.collection("users").doc(uid).get();
-      const data = snap.data() as AUTH.User | undefined;
-
-      if (data) {
-        setUser(data); // 사용자를 상태로 설정
-        console.log(data, "fetched");
-      }
-    } catch (error: any) {
-      console.error("Error fetching user data:", error);
+    const snap = await ref.doc(uid).get();
+    const data = snap.data() as null | AUTH.User;
+    if (!data) {
+      return;
     }
+
+    setUser(data); // 사용자를 상태로 설정
+    console.log(data, "fetched");
   };
 
   useEffect(() => {
