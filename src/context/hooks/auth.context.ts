@@ -9,7 +9,9 @@ export interface Props {
   initialized: boolean;
 
   signup: (newUser: NewUser) => PromiseResult;
+
   signin: (email: string, password: string) => PromiseResult;
+
   signout: () => PromiseResult;
 }
 
@@ -31,6 +33,7 @@ export const userJobs: UserJob[] = [
 ];
 
 export const initialState: Props = {
+  //Props의 날것의 것을 정해놓는곳
   initialized: false,
   user: null,
   signin: async () => ({}),
