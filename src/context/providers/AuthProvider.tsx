@@ -9,7 +9,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const fetchUser = async (uid: string) => {
     try {
       const snap = await db.collection("users").doc(uid).get();
-      const data = snap.data() as AUTH.User | undefined;
+      const data = snap.data() as AUTH.User | null;
 
       if (data) {
         setUser(data); // 사용자를 상태로 설정
