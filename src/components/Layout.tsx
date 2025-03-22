@@ -79,7 +79,7 @@ const Layout = () => {
               );
             })}
           </ul>
-          //메뉴바밖에 클릭하면 꺼지레한는 스펜태그
+          {/* //메뉴바밖에 클릭하면 꺼지레한는 스펜태그 */}
           <span
             className="absolute -z-10 w-full h-full"
             onClick={menuHandler}
