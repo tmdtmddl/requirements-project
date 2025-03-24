@@ -76,6 +76,7 @@ const AuthPage = () => {
   };
   return (
     <div>
+      <title>{isNew ? "회원가입" : "로그인"}</title>
       <form
         className="col gap-y-2.5 max-w-100 mx-auto p-5"
         onSubmit={(e) => {

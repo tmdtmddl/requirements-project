@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div className="w-full h-screen col justify-center items-center gap-y-5">
+      <title>요구사항앱</title>
       <div className="col gap-y-2.5 max-w-120">
         <h1 className="text-4xl font-black">아직도 엑셀로 요구사항을??</h1>
         <h2 className="font-light text-lg">

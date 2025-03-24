@@ -27,9 +27,11 @@ const RequirementItem = (r: RProps) => {
 
   const onCopyLink = async () => {
     try {
-      const url = `${import.meta.env.VITE_WEB_URL}/project/${projectId}/${
-        r?.id
-      }`;
+      const url = `${
+        import.meta.env.DEV
+          ? import.meta.env.VITE_WEB_URL
+          : "http://localhost:5173/requirements-project"
+      }/project/${projectId}/${r?.id}`;
       await navigator.clipboard.writeText(url);
 
       alert("링크가복사되었습니다.");

@@ -27,7 +27,11 @@ const ProjectItem = (project: Props) => {
 
   const onCopyLink = async () => {
     try {
-      const url = `${import.meta.env.VITE_WEB_URL}/project/${project?.id}`;
+      const url = `${
+        import.meta.env.DEV
+          ? import.meta.env.VITE_WEB_URL
+          : "http://localhost:5173/requirements-project"
+      }/project/${project?.id}`;
       await navigator.clipboard.writeText(url);
 
       alert("링크가복사되었습니다.");

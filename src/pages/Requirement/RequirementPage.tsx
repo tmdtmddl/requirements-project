@@ -77,6 +77,7 @@ const RequirementPage = () => {
     />
   ) : (
     <div className="p-5 max-w-300 mx-auto">
+      <title>{project.name}</title>
       <div className="mb-2.5">
         <Link to={"/project"} className=" hover:text-theme  text-gray-500">
           전체 프로젝트 보기
