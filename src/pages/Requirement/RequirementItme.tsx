@@ -6,7 +6,7 @@ import { AUTH } from "../../context/hooks";
 
 const RequirementItem = (r: RProps) => {
   const { user } = AUTH.use();
-  const { page, desc, function: f, managers, progress, uid, projectId } = r;
+  const { page, desc, function: f, managers, progress, projectId } = r;
 
   const [isHovering, setIsHovering] = useState(false);
 
