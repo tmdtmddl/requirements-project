@@ -85,7 +85,6 @@ const RequirementForm = ({
         ...r,
         uid,
         projectId,
-        isSharable: sRef.current?.checked,
       };
       try {
         await ref.add(newR);
@@ -120,7 +119,7 @@ const RequirementForm = ({
       isPPFSame &&
       isDescSame &&
       isManagerSame &&
-      sRef.current?.checked === r?.isSharable
+      payload?.isSharable === r?.isSharable
     ) {
       return alert("변경사항이 없습니다.");
     }
@@ -139,9 +138,9 @@ const RequirementForm = ({
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => proRef.current?.showPicker(), 300);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => proRef.current?.showPicker(), 300);
+  // }, []);
 
   return (
     <form
@@ -189,6 +188,7 @@ const RequirementForm = ({
           요구사항 상세 내용
         </label>
         <input
+          id="desc"
           type="text"
           className="ti-input px-1.5"
           placeholder="요구사항 상세 내용 작성 예) 홈페이지에서 향기가 나게 해주세요."
@@ -244,6 +244,7 @@ const RequirementForm = ({
           담당자
         </label>
         <input
+          id="manager"
           type="text"
           className="ti-input px-1.5"
           placeholder="담당자 이름을 입력해주세요."
@@ -307,6 +308,7 @@ const RequirementForm = ({
           ref={sRef}
           className="w-5 h-5"
           checked={r.isSharable}
+          onChange={(e) => onChangeR("isSharable", e.target.checked)}
         />
       </div>
 

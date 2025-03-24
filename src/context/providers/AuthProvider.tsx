@@ -15,16 +15,13 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }
 
     setUser(data); // 사용자를 상태로 설정
-    console.log(data, "fetched");
   };
 
   useEffect(() => {
     const subscribe = authService.onAuthStateChanged((fbUser) => {
       if (!fbUser) {
-        console.log("no user logged in");
         setUser(null);
       } else {
-        console.log(fbUser.uid, "fetch data from db");
         fetchUser(fbUser.uid);
       }
       // 앱이 준비 끝남.
