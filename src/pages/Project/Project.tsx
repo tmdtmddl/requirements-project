@@ -7,7 +7,7 @@ const Project = () => {
   const { user } = AUTH.use();
 
   const [projects, setProjects] = useState<ProjectProps[]>([]);
-
+  //파이어베이스에서 데이터를 읽어와서 담는 그릇에 set함수를 data로 바꾸는것 ???
   useEffect(() => {
     if (user) {
       const subProjects = db
